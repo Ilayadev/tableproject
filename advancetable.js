@@ -97,7 +97,7 @@ function creatingcolumns(ob) {
     container.appendChild(serial);
     container.style.gridTemplateColumns += ob.serialcolumn;
     for (var i = 0; i < columns; i++) {
-        container.style.gridTemplateColumns += ` 100px`;
+        container.style.gridTemplateColumns += ` 1fr`;
         var div = createElement();
         div.setAttribute('header', i + 2);
         div.setAttribute('value', 'header');
