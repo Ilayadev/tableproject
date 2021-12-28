@@ -189,6 +189,7 @@ function highlight(e) {
         var nth = index + 1;
         stylesheet.cssRules[11].selectorText = `.item1:nth-child(${nth})`;
     }
+    console.log('hii');
 }
 function editing(e) {
     var ele = e.target
@@ -302,7 +303,7 @@ function scrolling(e) {
     if (sctop >= 0) {
         if (sctop % 2 === 0) {
             var start = Math.floor(sctop / 20);
-            var end = Math.floor((sctop + 280) / 20);
+            var end = Math.floor((sctop + 300) / 20);
             function deleting() {
                 var rows = document.querySelectorAll('.item1[rows=yes]')
                 rows.forEach(x => {
@@ -326,7 +327,7 @@ function loading() {
     var sctop = main.scrollTop;
     if (sctop === 0) {
         var start = sctop / 20;
-        var end = 280 / 20;
+        var end = 300/ 20;
         loopingrows(start, end, table)
     }
 }
