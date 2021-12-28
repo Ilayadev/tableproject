@@ -49,9 +49,9 @@ function generatedate() {
 }
 
 function generateboolean() {
-    var arr=['true','false']
+    var arr = ['true', 'false']
     random = Math.floor(Math.random() * 2);
-    var value=arr[random]    
+    var value = arr[random]
     return value;
 }
 function creatingdata(ob) {
@@ -77,7 +77,7 @@ function generating(column) {
 }
 function generaterows(n, object) {
     var dumy = document.querySelector('.dummy');
-    dumy.style.height = (n * 20)+20 + 'px';
+    dumy.style.height = (n * 20) + 20 + 'px';
     for (var i = 1; i <= n; i++) {
         creatingdata(object);
     }
@@ -110,13 +110,13 @@ function creatingcolumns(ob) {
     container.addEventListener('click', highlight);
     container.addEventListener('dblclick', editing);
     container.addEventListener('keydown', removefocus);
-} 
+}
 var rowno;
-function loopingrows(s, e, ob) {  
-    rowno=0; 
+function loopingrows(s, e, ob) {
+    rowno = 0;
     var rows = ob.rows;
     for (var i = s; i < e; i++) {
-       
+
         creatingrows(rows, i, ob)
     }
 }
@@ -127,7 +127,7 @@ function creatingrows(y, z, ob) {
         var serialdiv = createElement();
         serialdiv.setAttribute('rows', 'yes')
         serialdiv.innerText = z + 1;
-        serialdiv.setAttribute('rowno',rowno    )
+        serialdiv.setAttribute('rowno', rowno)
         serialdiv.setAttribute('value', 'row')
         x.appendChild(serialdiv);
         var elementslength = ob.columns.length;
@@ -244,7 +244,7 @@ function removefocus(e) {
             newele.focus();
         }
     }
-    
+
 }
 function creatingdialogue() {
     var overley = document.querySelector('.overley')
@@ -297,7 +297,7 @@ function addingrow() {
     document.querySelector('.container').style.gridTemplateRows = '20px';
 }
 function scrolling(e) {
-    
+
     var sctop = e.target.scrollTop;
     if (sctop >= 0) {
         if (sctop % 2 === 0) {
@@ -326,7 +326,7 @@ function loading() {
     var sctop = main.scrollTop;
     if (sctop === 0) {
         var start = sctop / 20;
-        var end = 280/ 20 ;
+        var end = 280 / 20;
         loopingrows(start, end, table)
     }
 }
