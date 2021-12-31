@@ -1,4 +1,5 @@
 var table = {
+    tableheight: '300',
     columns: [
         {
             title: 'id',
@@ -81,95 +82,32 @@ function generaterows(n, object) {
     for (var i = 1; i <= n; i++) {
         creatingdata(object);
     }
-    creatingcolumns(object);
+    // creatingcolumns(object);
 }
 function creatingcolumns(ob) {
     glo = ob;
     var columns = ob.columns.length;
-    var headerrow = ob.headerrow;
-    var serial = createElement();
-    serial.innerText = 'S.NO';
-    serial.style.position = 'sticky';
-    serial.style.top = '0px';
-    serial.style.backgroundColor = '#fff';
     var container = document.querySelector('.container');
     container.style.gridTemplateColumns += ` 40px`;
-    container.appendChild(serial);
-    container.style.gridTemplateColumns += ob.serialcolumn;
     for (var i = 0; i < columns; i++) {
-        container.style.gridTemplateColumns += ` 1fr`;
-        var div = createElement();
-        div.setAttribute('header', i + 2);
-        div.setAttribute('value', 'header');
-        div.innerText = ob.columns[i].title;
-        div.style.position = 'sticky';
-        div.style.top = '0px';
-        div.style.backgroundColor = '#fff';
-        container.appendChild(div);
+        container.style.gridTemplateColumns += ` 100px`;
     }
     container.addEventListener('click', highlight);
     container.addEventListener('dblclick', editing);
     container.addEventListener('keydown', removefocus);
+    container.addEventListener('drag', draging);
+    container.addEventListener('drop', droping);
+    container.addEventListener('dragenter', dragentering);
+    container.addEventListener('dragleave', dragleaving);
+    container.addEventListener('dragover', dragovering);
+    container.addEventListener('dragend', dragend);
 }
-var rowno;
-function loopingrows(s, e, ob) {
-    rowno = 0;
-    var rows = ob.rows;
-    for (var i = s; i < e; i++) {
-
-        creatingrows(rows, i, ob)
-    }
-}
-function creatingrows(y, z, ob) {
-    if (y[z] !== undefined) {
-        rowno++
-        var x = document.querySelector('.container');
-        var serialdiv = createElement();
-        serialdiv.setAttribute('rows', 'yes')
-        serialdiv.innerText = z + 1;
-        serialdiv.setAttribute('rowno', rowno)
-        serialdiv.setAttribute('value', 'row')
-        x.appendChild(serialdiv);
-        var elementslength = ob.columns.length;
-        for (var j = 0; j < elementslength; j++) {
-            var div = createElement();
-            div.setAttribute('cells', 'yes');
-            div.setAttribute('tabindex', 1);
-            if (j === 0) {
-                div.innerText = y[z][ob.columns[j].title];
-            } else {
-                var sub = ob.columns[j].title;
-                if (sub !== 'total') {
-                    // total += (y[z][sub]) / 1;
-                } else {
-                    y[z][sub] = total;
-                }
-                div.innerHTML = y[z][sub];
-            }
-            div.setAttribute('name', ob.columns[j].title);
-            div.setAttribute('rowno', z + 1)
-            x.appendChild(div);
-
-        }
-    }
-}
-function createElement() {
-    var div = document.createElement('div');
-    div.className = "item1";
-    return div;
-}
+var preFocEle;
 function highlight(e) {
-    if (document.querySelector('.highlight')) {
-        var ele = document.querySelectorAll('.highlight');
-        ele.forEach(x => {
-            x.classList.remove('highlight')
-        })
-    }
     var att = e.target.getAttribute('value');
     var stylesheet = document.styleSheets[0];
-    stylesheet.cssRules[11].style.backgroundColor = '#8c9998';
-    if (att === 'row' || att === 'header') {
-        if (att === 'row') {
+    if (att === 'rowheader' || att === 'columnheader') {
+        if (att === 'rowheader') {
             var len = glo.columns.length;
             var rowno = e.target.getAttribute('rowno');
             var start = (rowno * (len + 1)) + 1;
@@ -178,157 +116,271 @@ function highlight(e) {
         }
         else {
             var nth = glo.columns.length + 1
-            var headerno = e.target.getAttribute('header');
+            var headerno = e.target.getAttribute('header') / 1 + 1;
             stylesheet.cssRules[11].selectorText = `.item1:nth-child(${nth}n+${headerno})`;
         }
+        stylesheet.cssRules[12].selectorText = '.cells'
     }
     else {
-        var childs = e.target.parentNode.children;
-        var array = Array.from(childs)
-        var index = array.indexOf(e.target);
-        var nth = index + 1;
-        stylesheet.cssRules[11].selectorText = `.item1:nth-child(${nth})`;
+        if (preFocEle) {
+            preFocEle.removeAttribute('contenteditable');
+            preFocEle.blur();
+            removestyle(preFocEle);
+            updatingvalue(preFocEle);
+        }
+        var nth = findingindex(e.target) + 1;
+        stylesheet.cssRules[11].selectorText = '.test';
+        if (nth !== 1) {
+            stylesheet.cssRules[12].selectorText = `.item1:nth-child(${nth})`;
+        }
+        preFocEle = e.target;
+        e.target.focus();
     }
-    console.log('hii');
 }
 function editing(e) {
-    var ele = e.target
-    if (ele.hasAttribute('cells')) {
+    var ele = e.target;
+    var att = ele.getAttribute('value')
+    if (att === 'cells') {
         ele.setAttribute('contenteditable', true);
         ele.focus();
+        addingstyle(ele)
     }
 }
 function removefocus(e) {
     var stylesheet = document.styleSheets[0];
-    stylesheet.cssRules[11].style.backgroundColor = 'transparent';
-    if (document.querySelector('.highlight')) {
-        var ele = document.querySelectorAll('.highlight');
-        ele.forEach(x => {
-            x.classList.remove('highlight')
-        })
-    }
     var ele = e.target;
-    var row = glo.rows;
-    if (e.keyCode === 13 || e.keyCode === 9) {
-        ele.setAttribute('contenteditable', 'false')
-        // var innervalue = ele.innerText;
-        // var row = ele.getAttribute('rowno');
-        // var value = ele.getAttribute('name');
-        // row[row - 1][value] = (innervalue) / 1;
-    } if (e.keyCode === 37 || e.keyCode === 39) {
-        ele.setAttribute('contenteditable', 'false');
-        var element;
-        if (e.keyCode === 37) {
-            element = ele.previousElementSibling;
+    if (ele.hasAttribute('contenteditable')) {
+        if (e.keyCode === 13) {
+            ele.removeAttribute('contenteditable');
+            updatingvalue(ele);
+            removestyle(ele);
+        } else if (e.keyCode === 38 || e.keyCode === 40) {
+            e.preventDefault();
+        }
+    } else {
+        if (e.keyCode === 13) {
+            ele.setAttribute('contenteditable', 'true');
+            e.preventDefault();
+            addingstyle(ele);
+        } else if (e.keyCode === 37 || e.keyCode === 39) {
+            var element;
+            if (e.keyCode === 37) {
+                element = ele.previousElementSibling;
+            }
+            else {
+                element = ele.nextElementSibling;
+            }
+            if (element.getAttribute('value') === 'cells') {
+                var nth = findingindex(element) + 1;
+                stylesheet.cssRules[12].selectorText = `.item1:nth-child(${nth})`;
+                element.focus();
+
+            }
+        }
+        else if (e.keyCode === 38 || e.keyCode === 40) {
+
+            var index = findingindex(ele)
+            var addvalue = glo.columns.length + 1;
+            var newindex;
+            if (e.keyCode === 38) {
+                newindex = index - addvalue;
+            } else {
+                newindex = index + addvalue;
+            }
+            var childs = document.querySelector('.container').children;
+            var newele = childs[newindex];
+            if (newele) {
+                if (newele.getAttribute('value') === 'cells') {
+                    stylesheet.cssRules[12].selectorText = `.item1:nth-child(${newindex + 1})`;
+                    newele.focus();
+                    e.preventDefault();
+                    ele.blur();
+                }
+            }
+        }
+    }
+
+}
+function creatingelements() {
+    generaterows(100000, table)
+    creatingcolumns(table)
+    if (table.tableheight === '') {
+        table.tableheight = '300'
+    }
+    var col = table.columns.length + 1;
+    var rows = table.tableheight / 20;
+    var totalele = col * rows
+    var main = document.querySelector('.main')
+    main.style.height = table.tableheight + 'px';
+    var container = main.querySelector('.container')
+    for (var i = 0; i < totalele; i++) {
+        var ele = document.createElement('div');
+        ele.classList.add('item1')
+        container.appendChild(ele);
+    }
+    for (var i = 0; i < col; i++) {
+        var ele = container.children[i];
+        if (i === 0) {
+            ele.innerText = 'S.NO'
         }
         else {
-            element = ele.nextElementSibling;
-        }
-        if (element) {
-            element.focus();
-        }
-    }
-    if (e.keyCode === 38 || e.keyCode === 40) {
-        ele.setAttribute('contenteditable', 'false');
-        var childs = ele.parentNode.children;
-        var array = Array.from(childs)
-        var index = array.indexOf(ele);
-        var addvalue = glo.columns.length + 1;
-        var newindex;
-        if (e.keyCode === 38) {
-            newindex = index - addvalue;
-        } else {
-            newindex = index + addvalue;
-        }
-        var newele = childs[newindex];
-        if (newele) {
-            newele.focus();
+            ele.innerText = table.columns[i - 1].title;
+            ele.setAttribute('value', 'columnheader')
+            ele.setAttribute('header', i)
+            ele.setAttribute('draggable', 'true');
         }
     }
+    var mainsctop = main.scrollTop;
+    var start = mainsctop / 20;
+    var end = (mainsctop + table.tableheight) / 20;
+    assingvalue(start, end, table)
+}
+var n = 7;
 
-}
-function creatingdialogue() {
-    var overley = document.querySelector('.overley')
-    overley.style.display = 'inline-flex';
-    var elements = glo.columns.length;
-    var box = document.querySelector('.dialogue')
-    for (var i = 0; i < elements; i++) {
-        var name = glo.columns[i].title;
-        if (name !== 'total') {
-            var lable = document.createElement('label');
-            var input = document.createElement('input');
-            lable.setAttribute('class', name);
-            lable.innerText = name + ':';
-            input.setAttribute('id', name);
-            box.appendChild(lable);
-            box.appendChild(input);
-        }
-    }
-    var button = document.createElement('button');
-    button.innerText = 'Add';
-    button.style.alignSelf = 'center';
-    button.addEventListener('click', addingrow)
-    button.classList.add('button')
-    box.appendChild(button)
-        ;
-}
-function addingrow() {
-    var elements = glo.columns.length;
-    var box = document.querySelector('.dialogue')
-    var newrow = new Object();
-    for (var i = 0; i < elements; i++) {
-        var name = glo.columns[i].title
-        if (name !== 'total') {
-            var ele = box.querySelector('#' + name);
-            newrow[name] = ele.value;
-            ele.remove();
-            box.querySelector('.' + name).remove();
-        }
-    }
-    table.rows.push(newrow);
-    box.querySelector('button').remove();
-    var overley = document.querySelector('.overley')
-    overley.style.display = 'none';
-    var items = document.querySelectorAll('.item1');
-    items.forEach(x => {
-        if ((x.hasAttribute('cells')) || (x.hasAttribute('rows'))) {
-            x.remove()
-        }
-    })
-    document.querySelector('.container').style.gridTemplateRows = '20px';
-}
-function scrolling(e) {
-
-    var sctop = e.target.scrollTop;
-    if (sctop >= 0) {
-        if (sctop % 2 === 0) {
-            var start = Math.floor(sctop / 20);
-            var end = Math.floor((sctop + 300) / 20);
-            function deleting() {
-                var rows = document.querySelectorAll('.item1[rows=yes]')
-                rows.forEach(x => {
-                    x.remove()
-                })
-                var cells = document.querySelectorAll('.item1');
-                cells.forEach(x => {
-                    if (x.hasAttribute('cells')) {
-                        x.remove();
-                    }
-                })
+function assingvalue(start, end, ob) {
+    var row = start;
+    var parent = document.querySelector('.container');
+    var collen = ob.columns.length;
+    var arr = ob.rows.slice(start, end);
+    for (var i = 0; i < arr.length - 1; i++) {
+        for (var j = 0; j < collen + 1; j++) {
+            var ele = parent.children[n];
+            if (ele) {
+                if (j === 0) {
+                    ele.innerText = row + 1;
+                    ele.setAttribute('value', 'rowheader');
+                    ele.setAttribute('rowno', i + 1);
+                } else {
+                    var obj = arr[i];
+                    var title = ob.columns[j - 1].title;
+                    var values = obj[title];
+                    ele.innerText = values;
+                    ele.setAttribute('value', 'cells');
+                    ele.setAttribute('rowno', i + 1)
+                    ele.setAttribute('title', title);
+                    ele.setAttribute('tabindex', 1)
+                    ele.setAttribute('index', row + 1);
+                }
             }
-            setTimeout(deleting(), 300);
-            loopingrows(start, end, table)
+            n++;
+        }
+
+        row++;
+    }
+
+}
+
+function scrolling(e) {
+    n = 7;
+    var mainsctop = e.target.scrollTop;
+    if (mainsctop >= 0) {
+        if (mainsctop % 2 === 0) {
+            var start = Math.floor(mainsctop / 20);
+            var end = Math.floor((mainsctop / 1 + table.tableheight / 1) / 20);
+            assingvalue(start, end, table);
         }
     }
 }
-function loading() {
-    generaterows(1000, table)
-    var main = document.querySelector('.main');
-    var sctop = main.scrollTop;
-    if (sctop === 0) {
-        var start = sctop / 20;
-        var end = 300/ 20;
-        loopingrows(start, end, table)
+var header;
+function findingindex(ele) {
+    var childs = ele.parentNode.children;
+    var array = Array.from(childs)
+    var index = array.indexOf(ele);
+    var nth = index;
+    return nth;
+}
+function draging(e) {
+    var stylesheet = document.styleSheets[0];
+    var ele = e.target;
+    var att = ele.getAttribute('value');
+    if (att === 'columnheader') {
+        header = ele.getAttribute('header');
+    }
+    var nth = glo.columns.length + 1;
+    stylesheet.cssRules[11].selectorText = `.item1:nth-child(${nth}n+${header / 1 + 1})`;
+}
+function droping(e) {
+
+    var stylesheet = document.styleSheets[0];
+    var ele = e.target;
+    ele.style.border = '1px solid lightgreen'
+    var att = ele.getAttribute('value');
+    if (att === 'columnheader') {
+        var dropheader = ele.getAttribute('header');
+        var container = document.querySelector('.container');
+        var lastchild = container.lastChild;
+        var lastrowno = lastchild.getAttribute('rowno');
+        var nth = glo.columns.length + 1;
+        stylesheet.cssRules[11].selectorText = `.item1:nth-child(${nth}n+${dropheader / 1 + 1})`;
+        for (var i = 0; i <= lastrowno; i++) {
+            var firsteleindex = header / 1 + (nth * i);
+            var secondeleindex = (nth * i) + dropheader / 1
+            var firstele = container.children[firsteleindex];
+            var secondele = container.children[secondeleindex];
+            var temptext = firstele.innerText;
+            firstele.innerText = secondele.innerText
+            secondele.innerText = temptext;
+
+        }
+    }
+    e.preventDefault();
+}
+function dragentering(e) {
+    var ele = e.target;
+    var att = ele.getAttribute('value');
+    if (att === 'columnheader') {
+        ele.style.border = '2px dashed lightgreen';
     }
 }
+function dragleaving(e) {
+    var ele = e.target;
+    var att = ele.getAttribute('value');
+    if (att === 'columnheader') {
+        ele.style.border = '1px solid #dedede';
+    }
+}
+function dragend(e) {
+    var ele = e.target;
+    var att = ele.getAttribute('value');
+    if (att === 'columnheader') {
+
+    }
+}
+function dragovering(e) {
+    var ele = e.target;
+    var att = ele.getAttribute('value');
+    if (att === 'columnheader') {
+        e.preventDefault();
+    }
+}
+function bluring(e) {
+    var ele = e.target;
+    var att = ele.getAttribute('value');
+    if (att === 'cells') {
+        console.log('blured');
+    }
+}
+function updatingvalue(ele) {
+    var rows = glo.rows;
+    var innervalue = ele.innerText;
+    var row = ele.getAttribute('index');
+    var title = ele.getAttribute('title');
+    rows[row - 1][title] = (innervalue);
+}
+function addingstyle(ele) {
+    ele.style.position = 'relative';
+    ele.style.top = '-1px';
+    ele.style.left = '-2px';
+    ele.style.boxShadow = '1px 2px 3px 0px gray';
+}
+function removestyle(ele) {
+    ele.style.position = 'static';
+    ele.style.boxShadow = 'none';
+}
+
+
+
+
+
+
 
