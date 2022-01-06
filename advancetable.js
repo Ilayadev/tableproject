@@ -103,11 +103,13 @@ function creatingcolumns(ob) {
     container.addEventListener('dragend', dragend);
 }
 var preFocEle;
-function highlight(e) {
+var highlightrow;
+function highlight(e) {    
     var att = e.target.getAttribute('value');
     var stylesheet = document.styleSheets[0];
     if (att === 'rowheader' || att === 'columnheader') {
         if (att === 'rowheader') {
+            highlightrow=e.target.innerText;                      
             var len = glo.columns.length;
             var rowno = e.target.getAttribute('rowno');
             var start = (rowno * (len + 1)) + 1;
@@ -202,7 +204,7 @@ function removefocus(e) {
 
 }
 function creatingelements() {
-    generaterows(100000, table)
+    generaterows(1000, table)
     creatingcolumns(table)
     if (table.tableheight === '') {
         table.tableheight = '300'
@@ -236,13 +238,13 @@ function creatingelements() {
     assingvalue(start, end, table)
 }
 var n = 7;
-
 function assingvalue(start, end, ob) {
     var row = start;
     var parent = document.querySelector('.container');
     var collen = ob.columns.length;
+    var prerow;
     var arr = ob.rows.slice(start, end);
-    for (var i = 0; i < arr.length - 1; i++) {
+    for (var i = 0; i < arr.length; i++) {
         for (var j = 0; j < collen + 1; j++) {
             var ele = parent.children[n];
             if (ele) {
@@ -264,21 +266,21 @@ function assingvalue(start, end, ob) {
             }
             n++;
         }
-
-        row++;
-    }
-
+        var stylesheet = document.styleSheets[0];       
+        stylesheet.cssRules[11].selectorText = '.test';
+        row++;          
+    }    
 }
-
-function scrolling(e) {
+function scrolling() {
     n = 7;
-    var mainsctop = e.target.scrollTop;
+    var main=document.querySelector('.main')
+    var mainsctop = main.scrollTop;
     if (mainsctop >= 0) {
-        if (mainsctop % 2 === 0) {
+        // if (mainsctop % 2 === 0) {
             var start = Math.floor(mainsctop / 20);
-            var end = Math.floor((mainsctop / 1 + table.tableheight / 1) / 20);
+            var end = Math.floor((mainsctop/1 + table.tableheight/1) / 20);
             assingvalue(start, end, table);
-        }
+        // }
     }
 }
 var header;
@@ -307,21 +309,18 @@ function droping(e) {
     var att = ele.getAttribute('value');
     if (att === 'columnheader') {
         var dropheader = ele.getAttribute('header');
-        var container = document.querySelector('.container');
-        var lastchild = container.lastChild;
-        var lastrowno = lastchild.getAttribute('rowno');
+        var container = document.querySelector('.container');        
         var nth = glo.columns.length + 1;
         stylesheet.cssRules[11].selectorText = `.item1:nth-child(${nth}n+${dropheader / 1 + 1})`;
-        for (var i = 0; i <= lastrowno; i++) {
-            var firsteleindex = header / 1 + (nth * i);
-            var secondeleindex = (nth * i) + dropheader / 1
-            var firstele = container.children[firsteleindex];
-            var secondele = container.children[secondeleindex];
-            var temptext = firstele.innerText;
-            firstele.innerText = secondele.innerText
-            secondele.innerText = temptext;
-
-        }
+        var firindex=glo.columns[header-1];
+        glo.columns[header-1]=glo.columns[dropheader-1];
+        glo.columns[dropheader-1]=firindex;
+        var firstele = container.children[header];
+        var secondele = container.children[dropheader];
+        var temptext = firstele.innerText;
+        firstele.innerText = secondele.innerText
+        secondele.innerText = temptext;
+        scrolling(container);
     }
     e.preventDefault();
 }
@@ -351,13 +350,6 @@ function dragovering(e) {
     var att = ele.getAttribute('value');
     if (att === 'columnheader') {
         e.preventDefault();
-    }
-}
-function bluring(e) {
-    var ele = e.target;
-    var att = ele.getAttribute('value');
-    if (att === 'cells') {
-        console.log('blured');
     }
 }
 function updatingvalue(ele) {

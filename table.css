@@ -11,8 +11,7 @@ body{
     flex-direction: column;
 }
 
-.main{
-    
+.main{    
     overflow-y: auto;
     box-shadow: 0px 0px 3px 1px #dedede;
     display: flex;
@@ -21,8 +20,8 @@ body{
     display: grid;         
     width: max-content; 
     height: max-content;
-    position: sticky;
-    top: 0;
+   /* position: sticky;
+   top: 0; */
      
 }
 .item1{
@@ -35,7 +34,9 @@ body{
     background-color: #8c9998;
 }   
 .header{
-    background-color: #dbeaf7;
+    background-color: #fff;
+    position: sticky;
+    top: 0;
 }
 .rows{
     background-color: #ffe3c3;
