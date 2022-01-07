@@ -81,8 +81,7 @@ function generaterows(n, object) {
     dumy.style.height = (n * 20) + 20 + 'px';
     for (var i = 1; i <= n; i++) {
         creatingdata(object);
-    }
-    // creatingcolumns(object);
+    }  
 }
 function creatingcolumns(ob) {
     glo = ob;
