@@ -46,7 +46,7 @@ function generatedate() {
     var day = Math.floor(Math.random() * 31);
     var month = new Date().getMonth();
     var year = new Date().getFullYear();
-    return `${day}//${month}//${year}`
+    return `${day}/${month}/${year}`
 }
 
 function generateboolean() {
