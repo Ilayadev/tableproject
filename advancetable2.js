@@ -29,6 +29,7 @@ var table = {
 
     ]
 }
+var glo;
 function generatetext() {
     var random = Math.floor(Math.random() * 10);
     return 'text' + random;
@@ -84,9 +85,16 @@ function generaterows(n, object) {
     }
 }
 function onloading() {
-    generaterows(1000, table)
+    if(window.localStorage.length===0){
+        generaterows(1000, table);        
+        window.localStorage.setItem('object',JSON.stringify(table));        
+              
+    }else{
+        glo=JSON.parse(localStorage.getItem('object'))
+        height = glo.tableheight;           
+    }      
     creatingcolumns();
-    var columns = glo.columns.length;
+    var columns = glo.columns.length;   
     var main = document.querySelector('.main');
     var container = document.querySelector('.container');
     container.style.gridTemplateColumns += ` 40px`;
@@ -94,7 +102,7 @@ function onloading() {
         container.style.gridTemplateColumns += ` 100px`;
     }
     var mainsctop = main.scrollTop;
-    if (mainsctop === 0) {
+    if (mainsctop === 0) {       
         var start = mainsctop / 20;
         var end = (mainsctop + height) / 20
         var nextstart = end;
@@ -132,26 +140,29 @@ function creatingcolumns() {
     }
 }
 var rowno;
-function loopingrows(s, e, ob, a) {
+function loopingrows(s, e, ob, a) {   
     rowno = 0;
     var rows = ob.rows;
-    if (a === 'container') {
+    if (a === 'container') {       
+
         for (var i = s; i < e; i++) {
             creatingrows(rows, i, ob, a)
         }
     }
-    else {
+    else {      
         for (var i = e - 1; i >= s; i--) {
             creatingrows(rows, i, ob, a)
         }
     }
-    if (highlightrow) {
-        hightlightingrow(highlightrow);
+    if(highlightrowNo>s&&highlightrowNo<e){
+        if (highlightrow) {
+            hightlightingrow(highlightrow);            
+        }
     }
 }
-var highlightrowNo = 0;
+var highlightrowNo;
 var highlightrow;
-function creatingrows(y, z, ob, a) {
+function creatingrows(y, z, ob, a) {    
     if (y[z] !== undefined) {
         rowno++
         var x = document.querySelector('.container');
@@ -230,7 +241,7 @@ function scrolling() {
         if (preblock !== undefined) {
             if (preblock === 2 || preblock === 3) {
                 var rowstart;
-                var rowend;
+                var rowend;               
                 if (preblock === 2) {
                     rowstart = (preblock * height) / 20;
                     rowend = ((preblock * height) + height) / 20
@@ -239,6 +250,7 @@ function scrolling() {
                     callfunction = true;
                 }
                 if (preblock === 3) {
+                    stylesheet.cssRules[11].selectorText = '.test';
                     rowstart = (preblock * height) / 20;
                     rowend = ((preblock * height) + height) / 20
                     var start = 0;
@@ -248,6 +260,7 @@ function scrolling() {
                     document.querySelector('.main').scrollTop = height - 20;
                     preblock = preblock - 1;
                 }
+               
                 for (var i = rowstart; i < rowend; i++) {
                     for (var j = 0; j <= glo.columns.length; j++) {
                         if (glo.rows[i] != undefined) {
@@ -259,6 +272,7 @@ function scrolling() {
                 }
             }
             if (preblock > 3 && preblock < totalblock) {
+                stylesheet.cssRules[11].selectorText = '.test';
                 if (preblock === lastblock) {
                     preblock = totalblock;
                     rowstart = (preblock * height) / 20;
