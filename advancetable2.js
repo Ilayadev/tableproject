@@ -236,7 +236,7 @@ function scrolling() {
                     var start = (x * height) / 20;
                     var end = ((x * height) + height) / 20;
                     loopingrows(start, end, glo, 'inset');
-                    document.querySelector('.main').scrollTop = height - 20;                   
+                    main.scrollTop = height - 20;                   
                 }
                 down_removing_start = parent.children.length - 1;
                 for (var i = rowstart; i < rowend; i++) {
