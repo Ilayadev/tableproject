@@ -1,3 +1,6 @@
+// var callfunction = true;
+// var initial = 1;
+// var lastblock = 0;
 // if (preblock >= 2) {
             //     block = preblock - 1;                
             //     if(preblock>2){

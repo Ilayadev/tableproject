@@ -194,9 +194,6 @@ function creatingrows(y, z, ob, a) {
     }
 }
 var block = 1;
-var callfunction = true;
-var initial = 1;
-var lastblock = 0;
 var preblock;
 function scrolling() {
     var stylesheet = document.styleSheets[0];
@@ -211,8 +208,7 @@ function scrolling() {
     var bottom = scrollheight - clientheight;
     if (scrolltop === bottom) {
         if (totalblock > block) {
-            block++;
-            console.log(block)
+            block++;          
             var start = (height * block) / 20;
             var end = ((height * block) + height) / 20;
             preblock = block;
