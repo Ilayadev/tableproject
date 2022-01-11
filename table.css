@@ -68,7 +68,7 @@ border-radius: 25px;
     left: 0;
     z-index: 1;
 }
-.test{
+.row{
     background-color: rgb(191, 240, 191);  
     border: 1px solid lightgreen;   
 }
@@ -76,6 +76,7 @@ border-radius: 25px;
     border: 2px solid lightgreen;
     background-color: aliceblue;
 }
+
 .dummy{
     height: 0px;
 }

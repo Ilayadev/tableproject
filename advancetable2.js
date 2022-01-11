@@ -220,6 +220,8 @@ function scrolling() {
                         parent.removeChild(child);
                     }
                 }
+                    //  stylesheet.cssRules[11].selectorText = '.test';
+
             }
         }
     }
@@ -228,7 +230,8 @@ function scrolling() {
         down_removing_start = parent.children.length - 1;
         if (preblock !== undefined) {
             block = preblock - 1;
-            if (preblock > 1 && preblock <= totalblock) {              
+            if (preblock > 1 && preblock <= totalblock) {
+                // stylesheet.cssRules[11].selectorText = '.test';
                 rowstart = (preblock * height) / 20;
                 rowend = ((preblock * height) + height) / 20
                 if (preblock > 2) {
@@ -236,7 +239,7 @@ function scrolling() {
                     var start = (x * height) / 20;
                     var end = ((x * height) + height) / 20;
                     loopingrows(start, end, glo, 'inset');
-                    main.scrollTop = height - 20;                   
+                    document.querySelector('.main').scrollTop = height - 20;
                 }
                 down_removing_start = parent.children.length - 1;
                 for (var i = rowstart; i < rowend; i++) {
