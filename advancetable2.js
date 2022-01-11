@@ -160,6 +160,7 @@ function loopingrows(s, e, ob, a) {
 }
 var highlightrowNo;
 var highlightrow;
+var highlighted;
 function creatingrows(y, z, ob, a) {
     if (y[z] !== undefined) {
         rowno++
@@ -174,8 +175,10 @@ function creatingrows(y, z, ob, a) {
         } else {
             inele.parentNode.insertBefore(serialdiv, inele);
         }
-        if (highlightrowNo == (z + 1)) {
-            highlightrow = serialdiv;
+        if (highlighted === 'row') {
+            if (highlightrowNo == (z + 1)) {
+                highlightrow = serialdiv;
+            }
         }
         for (var j = 0; j < elementslength; j++) {
             var div = createElement();
@@ -204,15 +207,14 @@ function scrolling() {
     var main = document.querySelector('.main');
     var scrollheight = main.scrollHeight;
     var clientheight = main.clientHeight;
-    var scrolltop = main.scrollTop;    
+    var scrolltop = main.scrollTop;
     var bottom = scrollheight - clientheight;
     if (scrolltop === bottom) {
         if (totalblock > block) {
-            block++;          
+            block++;
             var start = (height * block) / 20;
             var end = ((height * block) + height) / 20;
             preblock = block;
-            loopingrows(start, end, glo, 'container');
             if (block > 2 && block < totalblock + 1) {
                 for (var i = up_removing_end - 1; i >= up_removing_start; i--) {
                     var child = parent.children[i];
@@ -220,9 +222,11 @@ function scrolling() {
                         parent.removeChild(child);
                     }
                 }
-                    //  stylesheet.cssRules[11].selectorText = '.test';
-
+                if (highlighted === 'row') {
+                    stylesheet.cssRules[11].selectorText = '.test';
+                }
             }
+            loopingrows(start, end, glo, 'container');
         }
     }
     if (scrolltop === 0) {
@@ -231,15 +235,18 @@ function scrolling() {
         if (preblock !== undefined) {
             block = preblock - 1;
             if (preblock > 1 && preblock <= totalblock) {
-                // stylesheet.cssRules[11].selectorText = '.test';
                 rowstart = (preblock * height) / 20;
                 rowend = ((preblock * height) + height) / 20
                 if (preblock > 2) {
                     var x = preblock - 3;
                     var start = (x * height) / 20;
                     var end = ((x * height) + height) / 20;
+                    if (highlighted === 'row') {
+                        stylesheet.cssRules[11].selectorText = '.test';
+                    }
                     loopingrows(start, end, glo, 'inset');
                     document.querySelector('.main').scrollTop = height - 20;
+
                 }
                 down_removing_start = parent.children.length - 1;
                 for (var i = rowstart; i < rowend; i++) {
@@ -268,6 +275,7 @@ function highlight(e) {
     if (att === 'rowheader' || att === 'columnheader') {
         if (att === 'rowheader') {
             highlightrowNo = e.target.innerText;
+            highlighted = 'row';            
             var len = glo.columns.length + 1;
             var index = findingindex(e.target);
             var row = index / len;
@@ -276,6 +284,7 @@ function highlight(e) {
             stylesheet.cssRules[11].selectorText = `.item1:nth-child(n+${start}):nth-child(-n+${end})`;
         }
         else {
+            highlighted = 'column';           
             var nth = glo.columns.length + 1
             var headerno = e.target.getAttribute('header') / 1 + 1;
             stylesheet.cssRules[11].selectorText = `.item1:nth-child(${nth}n+${headerno})`;
