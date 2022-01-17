@@ -404,8 +404,8 @@ function removestyle(ele) {
 var header;
 function draging(e) {
     var stylesheet = document.styleSheets[0];
-    console.log('hii')
     var ele = e.target;
+    console.log(ele);    
     var att = ele.getAttribute('value');
     if (att === 'columnheader') {
         header = ele.getAttribute('header');
