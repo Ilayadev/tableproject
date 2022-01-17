@@ -1,5 +1,5 @@
 var table = {
-    tableheight: 300,
+    tableheight:444,
     columns: [
         {
             title: 'id',
@@ -78,18 +78,21 @@ function generating(column) {
 }
 var height;
 function generaterows(n, object) {
-    glo=object;
+    glo = object;
     for (var i = 1; i <= n; i++) {
         creatingdata(object);
     }
 }
 function onloading() {
     // if(localStorage.length===0){
-        // generaterows(100,table);
+    // generaterows(100,table);
     //     localStorage.setItem('obj',JSON.stringify(table));        
     // }   
     // glo=JSON.parse(localStorage.getItem('obj'));
-    generaterows(100,table);   
+    generaterows(50, table);
+    if (glo.tableheight === '') {
+        glo.tableheight = 300;
+    }
     height = glo.tableheight;
     creatingcolumns();
     var columns = glo.columns.length;
@@ -101,8 +104,8 @@ function onloading() {
     }
     var mainsctop = main.scrollTop;
     if (mainsctop === 0) {
-        var start = mainsctop / 20;
-        var end = (mainsctop + height) / 20
+        var start = Math.floor(mainsctop / 20);
+        var end = Math.floor((mainsctop + height) / 20);
         var nextstart = end;
         var nextend = (height + height) / 20;
         loopingrows(start, end, glo, 'container');
@@ -154,7 +157,7 @@ function loopingrows(s, e, ob, a) {
     }
     if (highlightrowNo > s && highlightrowNo < e) {
         if (highlightrow) {
-            hightlightingrow(highlightrow);               
+            hightlightingrow(highlightrow);
         }
     }
 }
@@ -177,7 +180,7 @@ function creatingrows(y, z, ob, a) {
         }
         if (highlighted === 'row') {
             if (highlightrowNo == (z + 1)) {
-                highlightrow = serialdiv;                
+                highlightrow = serialdiv;
             }
         }
         for (var j = 0; j < elementslength; j++) {
@@ -203,17 +206,17 @@ function scrolling() {
     var parent = document.querySelector('.container');
     var up_removing_start = glo.columns.length + 1;
     var up_removing_end = ((height / 20) * up_removing_start) + up_removing_start;
-    var totalblock = Math.floor(glo.rows.length / (height / 20)) ;
+    var totalblock = Math.floor(glo.rows.length / (height / 20));
     var main = document.querySelector('.main');
     var scrollheight = main.scrollHeight;
     var clientheight = main.clientHeight;
     var scrolltop = main.scrollTop;
     var bottom = scrollheight - clientheight;
-    if (scrolltop === bottom) {
-        if (totalblock >block) {
+    if (scrolltop === bottom) {       
+        if (totalblock > block) {
             block++;
-            var start = (height * block) / 20;
-            var end = ((height * block) + height) / 20;
+            var start = Math.floor((height * block) / 20);
+            var end = Math.floor(((height * block) + height) / 20);
             preblock = block;
             if (block > 2 && block < totalblock + 1) {
                 for (var i = up_removing_end - 1; i >= up_removing_start; i--) {
@@ -229,15 +232,17 @@ function scrolling() {
             loopingrows(start, end, glo, 'container');
         }
     }
-    if (scrolltop === 0) { 
+    if (scrolltop === 0) {
         var down_removing_start;
         down_removing_start = parent.children.length - 1;
-        if (preblock !== undefined) {           
+        if (preblock !== undefined) {
             block = preblock - 1;
+            console.log(totalblock);
             if (preblock > 1 && preblock <= totalblock) {
-                rowstart = (preblock * height) / 20;
-                rowend = ((preblock * height) + height) / 20
+                rowstart = Math.floor((preblock * height) / 20);
+                rowend = Math.floor(((preblock * height) + height) / 20);
                 if (preblock > 2) {
+
                     var x = preblock - 3;
                     var start = (x * height) / 20;
                     var end = ((x * height) + height) / 20;
@@ -246,7 +251,6 @@ function scrolling() {
                     }
                     loopingrows(start, end, glo, 'inset');
                     document.querySelector('.main').scrollTop = height - 20;
-
                 }
                 down_removing_start = parent.children.length - 1;
                 for (var i = rowstart; i < rowend; i++) {
@@ -254,7 +258,7 @@ function scrolling() {
                         if (glo.rows[i] != undefined) {
                             var child = parent.children[down_removing_start];
                             parent.removeChild(child);
-                            down_removing_start--;
+                            down_removing_start--;                           
                         }
                     }
                 }
@@ -281,7 +285,7 @@ function highlight(e) {
     if (att === 'rowheader' || att === 'columnheader') {
         if (att === 'rowheader') {
             highlightrowNo = e.target.innerText;
-            highlighted = 'row';                     
+            highlighted = 'row';
             var len = glo.columns.length + 1;
             var index = findingindex(e.target);
             var row = index / len;
@@ -290,14 +294,14 @@ function highlight(e) {
             stylesheet.cssRules[11].selectorText = `.item1:nth-child(n+${start}):nth-child(-n+${end})`;
         }
         else {
-            highlighted = 'column';           
+            highlighted = 'column';
             var nth = glo.columns.length + 1
             var headerno = e.target.getAttribute('header') / 1 + 1;
             stylesheet.cssRules[11].selectorText = `.item1:nth-child(${nth}n+${headerno})`;
         }
         stylesheet.cssRules[12].selectorText = '.cells'
     }
-    else {        
+    else {
         var nth = findingindex(e.target) + 1;
         stylesheet.cssRules[11].selectorText = '.test';
         if (nth !== 1) {
@@ -305,7 +309,7 @@ function highlight(e) {
         }
         preFocEle = e.target;
         e.target.focus();
-    }    
+    }
 }
 function editing(e) {
     var ele = e.target;
@@ -410,7 +414,7 @@ var header;
 function draging(e) {
     alert("hii")
     var stylesheet = document.styleSheets[0];
-    var ele = e.target;       
+    var ele = e.target;
     var att = ele.getAttribute('value');
     if (att === 'columnheader') {
         header = ele.getAttribute('header');
@@ -462,9 +466,8 @@ function dragleaving(e) {
         ele.style.border = '1px solid #dedede';
     }
 }
-function dragovering(e) {
-    // var ele = e.target;
-    e.preventDefault();      
+function dragovering(e) {    
+    e.preventDefault();
 }
 
 
