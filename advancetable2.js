@@ -78,18 +78,13 @@ function generating(column) {
 }
 var height;
 function generaterows(n, object) {
+    glo=object;
     for (var i = 1; i <= n; i++) {
         creatingdata(object);
     }
 }
 function onloading() {
-    if (window.localStorage.length === 0) {
-        generaterows(120, table);
-        window.localStorage.setItem('object', JSON.stringify(table));
-        glo = JSON.parse(localStorage.getItem('object'))
-    } else {
-        glo = JSON.parse(localStorage.getItem('object'))
-    }
+    generaterows(31,table)
     height = glo.tableheight;
     creatingcolumns();
     var columns = glo.columns.length;
@@ -154,7 +149,7 @@ function loopingrows(s, e, ob, a) {
     }
     if (highlightrowNo > s && highlightrowNo < e) {
         if (highlightrow) {
-            hightlightingrow(highlightrow);
+            hightlightingrow(highlightrow);               
         }
     }
 }
@@ -177,7 +172,7 @@ function creatingrows(y, z, ob, a) {
         }
         if (highlighted === 'row') {
             if (highlightrowNo == (z + 1)) {
-                highlightrow = serialdiv;
+                highlightrow = serialdiv;                
             }
         }
         for (var j = 0; j < elementslength; j++) {
@@ -203,14 +198,14 @@ function scrolling() {
     var parent = document.querySelector('.container');
     var up_removing_start = glo.columns.length + 1;
     var up_removing_end = ((height / 20) * up_removing_start) + up_removing_start;
-    var totalblock = Math.floor(glo.rows.length / (height / 20)) - 1;
+    var totalblock = Math.floor(glo.rows.length / (height / 20)) ;
     var main = document.querySelector('.main');
     var scrollheight = main.scrollHeight;
     var clientheight = main.clientHeight;
     var scrolltop = main.scrollTop;
     var bottom = scrollheight - clientheight;
     if (scrolltop === bottom) {
-        if (totalblock > block) {
+        if (totalblock >block) {
             block++;
             var start = (height * block) / 20;
             var end = ((height * block) + height) / 20;
@@ -222,17 +217,17 @@ function scrolling() {
                         parent.removeChild(child);
                     }
                 }
-                if (highlighted === 'row') {
-                    stylesheet.cssRules[11].selectorText = '.test';
-                }
+                // if (highlighted === 'row') {
+                //     stylesheet.cssRules[11].selectorText = '.test';
+                // }
             }
             loopingrows(start, end, glo, 'container');
         }
     }
-    if (scrolltop === 0) {
+    if (scrolltop === 0) { 
         var down_removing_start;
         down_removing_start = parent.children.length - 1;
-        if (preblock !== undefined) {
+        if (preblock !== undefined) {           
             block = preblock - 1;
             if (preblock > 1 && preblock <= totalblock) {
                 rowstart = (preblock * height) / 20;
@@ -272,10 +267,16 @@ var preFocEle;
 function highlight(e) {
     var att = e.target.getAttribute('value');
     var stylesheet = document.styleSheets[0];
+    if (preFocEle) {
+        preFocEle.removeAttribute('contenteditable');
+        preFocEle.blur();
+        removestyle(preFocEle);
+        updatingvalue(preFocEle);
+    }
     if (att === 'rowheader' || att === 'columnheader') {
         if (att === 'rowheader') {
             highlightrowNo = e.target.innerText;
-            highlighted = 'row';            
+            highlighted = 'row';                     
             var len = glo.columns.length + 1;
             var index = findingindex(e.target);
             var row = index / len;
@@ -291,13 +292,7 @@ function highlight(e) {
         }
         stylesheet.cssRules[12].selectorText = '.cells'
     }
-    else {
-        if (preFocEle) {
-            preFocEle.removeAttribute('contenteditable');
-            preFocEle.blur();
-            removestyle(preFocEle);
-            updatingvalue(preFocEle);
-        }
+    else {        
         var nth = findingindex(e.target) + 1;
         stylesheet.cssRules[11].selectorText = '.test';
         if (nth !== 1) {
@@ -305,7 +300,7 @@ function highlight(e) {
         }
         preFocEle = e.target;
         e.target.focus();
-    }
+    }    
 }
 function editing(e) {
     var ele = e.target;
@@ -409,6 +404,7 @@ function removestyle(ele) {
 var header;
 function draging(e) {
     var stylesheet = document.styleSheets[0];
+    console.log('hii')
     var ele = e.target;
     var att = ele.getAttribute('value');
     if (att === 'columnheader') {
@@ -463,6 +459,7 @@ function dragleaving(e) {
 }
 function dragovering(e) {
     var ele = e.target;
+   
     var att = ele.getAttribute('value');
     if (att === 'columnheader') {
         e.preventDefault();
