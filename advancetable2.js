@@ -84,7 +84,7 @@ function generaterows(n, object) {
     }
 }
 function onloading() {
-    generaterows(31,table)
+    generaterows(100,table)
     height = glo.tableheight;
     creatingcolumns();
     var columns = glo.columns.length;
@@ -217,9 +217,9 @@ function scrolling() {
                         parent.removeChild(child);
                     }
                 }
-                // if (highlighted === 'row') {
-                //     stylesheet.cssRules[11].selectorText = '.test';
-                // }
+                if (highlighted === 'row') {
+                    stylesheet.cssRules[11].selectorText = '.test';
+                }
             }
             loopingrows(start, end, glo, 'container');
         }
@@ -458,12 +458,8 @@ function dragleaving(e) {
     }
 }
 function dragovering(e) {
-    var ele = e.target;
-   
-    var att = ele.getAttribute('value');
-    if (att === 'columnheader') {
-        e.preventDefault();
-    }
+    // var ele = e.target;
+    e.preventDefault();      
 }
 
 
