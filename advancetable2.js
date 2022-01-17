@@ -84,11 +84,12 @@ function generaterows(n, object) {
     }
 }
 function onloading() {
-    if(localStorage.length===0){
-        generaterows(100,table);
-        localStorage.setItem('obj',JSON.stringify(table));        
-    }   
-    glo=JSON.parse(localStorage.getItem('obj'));   
+    // if(localStorage.length===0){
+        // generaterows(100,table);
+    //     localStorage.setItem('obj',JSON.stringify(table));        
+    // }   
+    // glo=JSON.parse(localStorage.getItem('obj'));
+    generaterows(100,table);   
     height = glo.tableheight;
     creatingcolumns();
     var columns = glo.columns.length;
