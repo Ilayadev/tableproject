@@ -84,7 +84,11 @@ function generaterows(n, object) {
     }
 }
 function onloading() {
-    generaterows(100,table)
+    if(localStorage.length===0){
+        generaterows(100,table);
+        localStorage.setItem('obj',JSON.stringify(table));        
+    }   
+    glo=JSON.parse(localStorage.getItem('obj'));   
     height = glo.tableheight;
     creatingcolumns();
     var columns = glo.columns.length;
@@ -403,6 +407,7 @@ function removestyle(ele) {
 }
 var header;
 function draging(e) {
+    alert("hii")
     var stylesheet = document.styleSheets[0];
     var ele = e.target;       
     var att = ele.getAttribute('value');
