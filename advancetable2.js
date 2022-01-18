@@ -1,5 +1,5 @@
 var table = {
-    tableheight:444,
+    tableheight:300,
     columns: [
         {
             title: 'id',
@@ -47,7 +47,7 @@ function generatedate() {
     var day = Math.floor(Math.random() * 31);
     var month = new Date().getMonth();
     var year = new Date().getFullYear();
-    return `${day}//${month}//${year}`
+    return `${day}/${month}/${year}`
 }
 function generateboolean() {
     var arr = ['true', 'false']
@@ -89,7 +89,7 @@ function onloading() {
     //     localStorage.setItem('obj',JSON.stringify(table));        
     // }   
     // glo=JSON.parse(localStorage.getItem('obj'));
-    generaterows(50, table);
+    generaterows(100, table);
     if (glo.tableheight === '') {
         glo.tableheight = 300;
     }
@@ -237,12 +237,10 @@ function scrolling() {
         down_removing_start = parent.children.length - 1;
         if (preblock !== undefined) {
             block = preblock - 1;
-            console.log(totalblock);
             if (preblock > 1 && preblock <= totalblock) {
                 rowstart = Math.floor((preblock * height) / 20);
                 rowend = Math.floor(((preblock * height) + height) / 20);
                 if (preblock > 2) {
-
                     var x = preblock - 3;
                     var start = (x * height) / 20;
                     var end = ((x * height) + height) / 20;
