@@ -1,5 +1,5 @@
 var table = {
-    tableheight:300,
+    tableheight: 300,
     columns: [
         {
             title: 'id',
@@ -155,10 +155,8 @@ function loopingrows(s, e, ob, a) {
             creatingrows(rows, i, ob, a)
         }
     }
-    if (highlightrowNo > s && highlightrowNo < e) {
-        if (highlightrow) {
-            hightlightingrow(highlightrow);
-        }
+    if (highlightrow) {
+        hightlightingrow(highlightrow);
     }
 }
 var highlightrowNo;
@@ -212,7 +210,7 @@ function scrolling() {
     var clientheight = main.clientHeight;
     var scrolltop = main.scrollTop;
     var bottom = scrollheight - clientheight;
-    if (scrolltop === bottom) {       
+    if (scrolltop === bottom) {
         if (totalblock > block) {
             block++;
             var start = Math.floor((height * block) / 20);
@@ -225,9 +223,7 @@ function scrolling() {
                         parent.removeChild(child);
                     }
                 }
-                if (highlighted === 'row') {
-                    stylesheet.cssRules[11].selectorText = '.test';
-                }
+                stylesheet.cssRules[11].selectorText = `.test`;
             }
             loopingrows(start, end, glo, 'container');
         }
@@ -244,9 +240,7 @@ function scrolling() {
                     var x = preblock - 3;
                     var start = (x * height) / 20;
                     var end = ((x * height) + height) / 20;
-                    if (highlighted === 'row') {
-                        stylesheet.cssRules[11].selectorText = '.test';
-                    }
+                    stylesheet.cssRules[11].selectorText = `.test`;
                     loopingrows(start, end, glo, 'inset');
                     document.querySelector('.main').scrollTop = height - 20;
                 }
@@ -256,7 +250,7 @@ function scrolling() {
                         if (glo.rows[i] != undefined) {
                             var child = parent.children[down_removing_start];
                             parent.removeChild(child);
-                            down_removing_start--;                           
+                            down_removing_start--;
                         }
                     }
                 }
@@ -284,12 +278,9 @@ function highlight(e) {
         if (att === 'rowheader') {
             highlightrowNo = e.target.innerText;
             highlighted = 'row';
-            var len = glo.columns.length + 1;
-            var index = findingindex(e.target);
-            var row = index / len;
-            var start = (row * len) + 1;
-            var end = (start + len) - 1;
-            stylesheet.cssRules[11].selectorText = `.item1:nth-child(n+${start}):nth-child(-n+${end})`;
+            highlightrow = e.target;
+            hightlightingrow(highlightrow);
+
         }
         else {
             highlighted = 'column';
@@ -369,7 +360,6 @@ function removefocus(e) {
             }
         }
     }
-
 }
 function hightlightingrow(ele) {
     var stylesheet = document.styleSheets[0];
@@ -377,13 +367,16 @@ function hightlightingrow(ele) {
     var index = findingindex(ele);
     var row = index / len;
     var start = (row * len) + 1;
-    var end = (start + len) - 1;
-    stylesheet.cssRules[11].selectorText = `.item1:nth-child(n+${start}):nth-child(-n+${end})`;
+    var end = (start + len) - 1;   
+    if (start > 0) {
+        stylesheet.cssRules[11].selectorText = `.item1:nth-child(n+${start}):nth-child(-n+${end})`;
+    }
 }
 function findingindex(ele) {
     var att = ele.getAttribute('value');
     if (att === 'rowheader' || att === 'cells') {
-        var childs = ele.parentNode.children;
+        var parent = document.querySelector('.container')
+        var childs = parent.children;
         var array = Array.from(childs)
         var index = array.indexOf(ele);
         return index;
@@ -464,7 +457,7 @@ function dragleaving(e) {
         ele.style.border = '1px solid #dedede';
     }
 }
-function dragovering(e) {    
+function dragovering(e) {
     e.preventDefault();
 }
 
