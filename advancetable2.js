@@ -407,8 +407,7 @@ function removestyle(ele) {
     ele.style.boxShadow = 'none';
 }
 var header;
-function draging(e) {
-    alert("hii")
+function draging(e) {   
     var stylesheet = document.styleSheets[0];
     var ele = e.target;
     var att = ele.getAttribute('value');
