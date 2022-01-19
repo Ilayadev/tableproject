@@ -154,10 +154,11 @@ function loopingrows(s, e, ob, a) {
         for (var i = e - 1; i >= s; i--) {
             creatingrows(rows, i, ob, a)
         }
-    }
-    if (highlightrow) {
-        hightlightingrow(highlightrow);
-    }
+    }    
+        if (highlightrow) {
+            hightlightingrow(highlightrow);
+        }
+    
 }
 var highlightrowNo;
 var highlightrow;
@@ -223,7 +224,9 @@ function scrolling() {
                         parent.removeChild(child);
                     }
                 }
-                stylesheet.cssRules[11].selectorText = `.test`;
+                if(highlighted==='row'){
+                    stylesheet.cssRules[11].selectorText = `.test`;
+                }
             }
             loopingrows(start, end, glo, 'container');
         }
@@ -240,7 +243,9 @@ function scrolling() {
                     var x = preblock - 3;
                     var start = (x * height) / 20;
                     var end = ((x * height) + height) / 20;
-                    stylesheet.cssRules[11].selectorText = `.test`;
+                    if(highlighted==='row'){
+                        stylesheet.cssRules[11].selectorText = `.test`;
+                    }
                     loopingrows(start, end, glo, 'inset');
                     document.querySelector('.main').scrollTop = height - 20;
                 }
@@ -277,7 +282,7 @@ function highlight(e) {
     if (att === 'rowheader' || att === 'columnheader') {
         if (att === 'rowheader') {
             highlightrowNo = e.target.innerText;
-            highlighted = 'row';
+            highlighted ='row';
             highlightrow = e.target;
             hightlightingrow(highlightrow);
 
