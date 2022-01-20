@@ -73,8 +73,8 @@ border-radius: 25px;
     border: 1px solid lightgreen;   
 }
 .cell{
-    border: 2px solid lightgreen;
-    background-color: aliceblue;
+    border: 2px solid lightgreen !important;
+    background-color: aliceblue !important;
 }
 .dummy{
     height: 0px;

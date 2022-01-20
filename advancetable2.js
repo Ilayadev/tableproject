@@ -84,12 +84,12 @@ function generaterows(n, object) {
     }
 }
 function onloading() {
-    // if(localStorage.length===0){
-    // generaterows(100,table);
-    //     localStorage.setItem('obj',JSON.stringify(table));        
-    // }   
-    // glo=JSON.parse(localStorage.getItem('obj'));
-    generaterows(100, table);
+    if (localStorage.length === 0) {
+        generaterows(100, table);
+    }
+    else {
+        glo = JSON.parse(localStorage.getItem('obj'));
+    }
     if (glo.tableheight === '') {
         glo.tableheight = 300;
     }
@@ -133,7 +133,7 @@ function creatingcolumns() {
             ele.innerText = 'S.NO'
         }
         else {
-            ele.innerText = table.columns[i - 1].title;
+            ele.innerText = glo.columns[i - 1].title;
             ele.setAttribute('value', 'columnheader')
             ele.setAttribute('header', i)
             ele.setAttribute('draggable', 'true');
@@ -154,11 +154,13 @@ function loopingrows(s, e, ob, a) {
         for (var i = e - 1; i >= s; i--) {
             creatingrows(rows, i, ob, a)
         }
-    }    
+    }
+    if (highlighted === 'row') {
         if (highlightrow) {
             hightlightingrow(highlightrow);
         }
-    
+    }
+
 }
 var highlightrowNo;
 var highlightrow;
@@ -224,7 +226,7 @@ function scrolling() {
                         parent.removeChild(child);
                     }
                 }
-                if(highlighted==='row'){
+                if (highlighted === 'row') {
                     stylesheet.cssRules[11].selectorText = `.test`;
                 }
             }
@@ -243,8 +245,9 @@ function scrolling() {
                     var x = preblock - 3;
                     var start = (x * height) / 20;
                     var end = ((x * height) + height) / 20;
-                    if(highlighted==='row'){
+                    if (highlighted === 'row') {
                         stylesheet.cssRules[11].selectorText = `.test`;
+                        stylesheet.cssRules[12].selectorText = '.cells'
                     }
                     loopingrows(start, end, glo, 'inset');
                     document.querySelector('.main').scrollTop = height - 20;
@@ -274,29 +277,35 @@ function highlight(e) {
     var att = e.target.getAttribute('value');
     var stylesheet = document.styleSheets[0];
     if (preFocEle) {
+        if (preFocEle.hasAttribute('contenteditable')) {
+            updatingvalue(preFocEle);
+        }
         preFocEle.removeAttribute('contenteditable');
         preFocEle.blur();
         removestyle(preFocEle);
-        updatingvalue(preFocEle);
     }
     if (att === 'rowheader' || att === 'columnheader') {
         if (att === 'rowheader') {
             highlightrowNo = e.target.innerText;
-            highlighted ='row';
+            highlighted = 'row';
             highlightrow = e.target;
+            var nextele = e.target.nextElementSibling;
             hightlightingrow(highlightrow);
-
+            hightlightingrow(nextele);
+            nextele.focus();
+            preFocEle = nextele;
         }
         else {
             highlighted = 'column';
             var nth = glo.columns.length + 1
             var headerno = e.target.getAttribute('header') / 1 + 1;
             stylesheet.cssRules[11].selectorText = `.item1:nth-child(${nth}n+${headerno})`;
+            stylesheet.cssRules[12].selectorText = '.cells'
         }
-        stylesheet.cssRules[12].selectorText = '.cells'
     }
     else {
         var nth = findingindex(e.target) + 1;
+        highlighted = 'cells';
         stylesheet.cssRules[11].selectorText = '.test';
         if (nth !== 1) {
             stylesheet.cssRules[12].selectorText = `.item1:nth-child(${nth})`;
@@ -326,6 +335,7 @@ function removefocus(e) {
             e.preventDefault();
         }
     } else {
+        stylesheet.cssRules[11].selectorText = `.test`;
         if (e.keyCode === 13) {
             ele.setAttribute('contenteditable', 'true');
             e.preventDefault();
@@ -372,9 +382,15 @@ function hightlightingrow(ele) {
     var index = findingindex(ele);
     var row = index / len;
     var start = (row * len) + 1;
-    var end = (start + len) - 1;   
+    var end = (start + len) - 1;
+    var att = ele.getAttribute('value')
     if (start > 0) {
-        stylesheet.cssRules[11].selectorText = `.item1:nth-child(n+${start}):nth-child(-n+${end})`;
+        if (att === 'rowheader') {
+            stylesheet.cssRules[11].selectorText = `.item1:nth-child(n+${start}):nth-child(-n+${end})`;
+        }
+        else {
+            stylesheet.cssRules[12].selectorText = `.item1:nth-child(${index + 1})`;
+        }
     }
 }
 function findingindex(ele) {
@@ -388,12 +404,19 @@ function findingindex(ele) {
     }
 }
 function updatingvalue(ele) {
+    var rows
     if (ele.hasAttribute('title')) {
-        var rows = glo.rows;
+        if (localStorage.length === 0) {
+            rows = glo.rows;
+        } else {
+            glo = JSON.parse(localStorage.getItem('obj'));
+            rows = glo.rows;
+        }
         var innervalue = ele.innerText;
         var row = ele.getAttribute('index');
         var title = ele.getAttribute('title');
         rows[row - 1][title] = (innervalue);
+        localStorage.setItem('obj', JSON.stringify(glo));
     }
 }
 function addingstyle(ele) {
@@ -407,7 +430,8 @@ function removestyle(ele) {
     ele.style.boxShadow = 'none';
 }
 var header;
-function draging(e) {   
+function draging(e) {
+    e.preventDefault();
     var stylesheet = document.styleSheets[0];
     var ele = e.target;
     var att = ele.getAttribute('value');
@@ -445,9 +469,12 @@ function droping(e) {
             }
         }
     }
+    localStorage.setItem('obj', JSON.stringify(glo));
+    glo = JSON.parse(localStorage.getItem('obj'));
     e.preventDefault();
 }
 function dragentering(e) {
+    e.preventDefault();
     var ele = e.target;
     var att = ele.getAttribute('value');
     if (att === 'columnheader') {
