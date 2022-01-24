@@ -10,10 +10,13 @@
     <title>Table sheet</title>
 </head>
 <body onload="onloading()" >             
-        <div class="main" onscroll="scrolling()" >
-            <div class="container" style="grid-auto-rows: 20px;"  ></div> 
-            <div class="dummy"></div>               
-        </div>       
+        <div class='overall' onscroll="overallscrolling()">
+            <div class="main" onscroll="mainscrolling()" >
+                <div class="container" style="grid-auto-rows: 20px;"  ></div> 
+            </div> 
+            <div class="dummy"></div>              
+
+        </div>      
         <!-- <button class="button" onclick="creatingdialogue()">add</button> -->
         <div class="overley">
             <div class="dialogue"></div>
