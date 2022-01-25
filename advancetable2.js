@@ -84,7 +84,7 @@ function generaterows(n, object) {
     }
 }
 function onloading() {
-    generaterows(1000, table);
+    generaterows(5000, table);
     if (glo.tableheight === '') {
         glo.tableheight = 300;
     }
@@ -222,7 +222,7 @@ function mainscrolling() {
                     stylesheet.cssRules[11].selectorText = `.test`;
                 }
             }
-            console.log(block)
+            // console.log(block)            
         }
     }
     if (scrolltop === 0) {
@@ -237,8 +237,8 @@ function mainscrolling() {
                 preblock = preblock - 1;
                 block = preblock;
             }
-            overall.scrollTop = preblock * 300;
-            console.log(preblock)
+            overall.scrollTop = preblock * 300; 
+            // console.log(preblock)         
         }
     }
 }
@@ -461,10 +461,11 @@ function dragovering(e) {
 var previousblock = 0;
 var rowarr = [0, 1];
 var sc = 0;
-function overallscrolling() {
-    var overallTop = document.querySelector('.overall').scrollTop;
-    var parent = document.querySelector('.container');
-    var main = document.querySelector('.main')
+function overallscrolling(e) {
+    e.preventDefault();
+    var overall=document.querySelector('.overall');
+    var overallTop = overall.scrollTop;    
+    var main = document.querySelector('.main')    
     var checking = Math.round(overallTop / height);
     if (checking != previousblock) {
         if (previousblock > checking) {
@@ -488,8 +489,16 @@ function overallscrolling() {
     else {
         main.scrollTop = sc + overallTop % height;
     }
+    if(overallTop===0){
+        block=1;
+        main.scrollTop = 0;        
+       }
+   
 }
-function printing(x, dir) {
+function printing(x, dir) {   
+    var overall=document.querySelector('.overall');
+    var scrolltop=overall.scrollTop;
+    var scrollHeight=overall.scrollHeight
     var container = document.querySelector('.container');
     var down_removing_start;
     var main = document.querySelector('.main');
@@ -536,7 +545,13 @@ function printing(x, dir) {
                 }
             }
         }
-        main.scrollTop = 300;
+        if(scrolltop===0){
+            main.scrollTop = 0;
+        }else if(scrolltop===scrollHeight-height){
+            main.scrollTop = height*2;
+        }else{
+            main.scrollTop = height;
+        }
     }
     else {
         down_removing_start = container.children.length - 1;
