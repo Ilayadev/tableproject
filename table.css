@@ -80,6 +80,10 @@ border-radius: 25px;
 }
 .dummy{
     height: 0px;
+    width: 18px;
+    background-color: white;
+    position: relative;
+    left: -15px;
 }
 .overall{
     overflow-y: auto;
