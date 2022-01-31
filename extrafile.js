@@ -195,3 +195,17 @@
 //             }
 //         }
 //     }
+
+ // for (var i = up_removing_end - 1; i >= up_removing_start; i--) {
+                    //     var child = container.children[i];
+                    //     if (child) {
+                    //         container.removeChild(child);
+                    //     }
+                    // }
+
+    // for (var j = down_removing_start; j >= three_block_children + up_removing_start; j--) {
+                    //     var child = container.children[j];
+                    //     if (child) {
+                    //         container.removeChild(child);
+                    //     }
+                    // }

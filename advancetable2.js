@@ -84,7 +84,7 @@ function generaterows(n, object) {
     }
 }
 function onloading() {
-    generaterows(5000, table);
+    generaterows(100, table);
     if (glo.tableheight === '') {
         glo.tableheight = 300;
     }
@@ -117,15 +117,15 @@ function onloading() {
     container.addEventListener('dragenter', dragentering);
     container.addEventListener('dragleave', dragleaving);
     container.addEventListener('dragover', dragovering);
-    previousTop = document.querySelector('.overall').scrollTop;
+    totalblock = Math.floor(glo.rows.length / (height / 20));
 }
 function creatingcolumns() {
-    var main = document.querySelector('.main')
+    var main = document.querySelector('.overall')
     main.style.height = glo.tableheight + 'px';
     collength = glo.columns.length;
     var container = document.querySelector('.container');
     for (var i = 0; i <= collength; i++) {
-        var ele = createElement();
+        var ele = creat('container');
         ele.classList.add('header');
         container.appendChild(ele)
         if (i === 0) {
@@ -139,17 +139,19 @@ function creatingcolumns() {
         }
     }
 }
-var rowno;
+var ele_index;
+var children_count
 function loopingrows(s, e, ob, a) {
-    rowno = 0;
+    var container = document.querySelector('.container')
+    children_count = container.childElementCount;
     var rows = ob.rows;
     if (a === 'container') {
-
         for (var i = s; i < e; i++) {
             creatingrows(rows, i, ob, a)
         }
     }
     else {
+        ele_index = 216;
         for (var i = e - 1; i >= s; i--) {
             creatingrows(rows, i, ob, a)
         }
@@ -160,17 +162,37 @@ function loopingrows(s, e, ob, a) {
         }
     }
 }
+var creat = (str) => {
+    var container = document.querySelector('.container');
+    var div
+    if (str === 'container') {
+        if (children_count == 322) {
+            div = container.childNodes[7];
+        }
+        else {
+            div = document.createElement('div');
+        }
+    } else {
+        div = container.childNodes[ele_index];
+        if (div === undefined) {
+            div = document.createElement('div');
+        }
+    }
+    div.classList.add('item1')
+    return div;
+}
 var highlightrowNo;
 var highlightrow;
 var highlighted;
 function creatingrows(y, z, ob, a) {
+    var container = document.querySelector('.container');
+    var elementslength = ob.columns.length;
     if (y[z] !== undefined) {
-        rowno++
         var x = document.querySelector('.container');
-        var serialdiv = createElement();
+        ele_index++;
+        var serialdiv = creat(a);
         serialdiv.innerText = z + 1;
         serialdiv.setAttribute('value', 'rowheader')
-        var elementslength = ob.columns.length;
         var inele = x.childNodes[elementslength + 1];
         if (a === 'container') {
             x.appendChild(serialdiv);
@@ -183,7 +205,8 @@ function creatingrows(y, z, ob, a) {
             }
         }
         for (var j = 0; j < elementslength; j++) {
-            var div = createElement();
+            ele_index++;
+            var div = creat(a);
             var sub = ob.columns[j].title;
             div.innerText = y[z][ob.columns[j].title];
             div.setAttribute('value', 'cells');
@@ -197,13 +220,20 @@ function creatingrows(y, z, ob, a) {
             }
         }
     }
+    else {
+        ele_index = 7;
+        container.childNodes[ele_index].remove();
+        for (var i = 0; i < elementslength; i++) {
+            container.childNodes[ele_index].remove();
+        }
+    }
 }
-var block = 1;
+var block = 0;
 var preblock;
+var totalblock;
 function mainscrolling() {
     var stylesheet = document.styleSheets[0];
     var overall = document.querySelector('.overall');
-    var totalblock = Math.floor(glo.rows.length / (height / 20));
     var main = document.querySelector('.main');
     var scrollheight = main.scrollHeight;
     var clientheight = main.clientHeight;
@@ -211,18 +241,14 @@ function mainscrolling() {
     var bottom = scrollheight - clientheight;
     if (scrolltop === bottom) {
         if (totalblock > block) {
-            if (block == 0) {
-                block = 1;
-            }
             block++;
             preblock = block
-            overall.scrollTop = block * 300;
+            overall.scrollTop = block * height;
             if (block > 2) {
                 if (highlighted === 'row') {
                     stylesheet.cssRules[11].selectorText = `.test`;
                 }
             }
-            // console.log(block)            
         }
     }
     if (scrolltop === 0) {
@@ -237,15 +263,9 @@ function mainscrolling() {
                 preblock = preblock - 1;
                 block = preblock;
             }
-            overall.scrollTop = preblock * 300; 
-            // console.log(preblock)         
+            overall.scrollTop = preblock * height;
         }
     }
-}
-function createElement() {
-    var div = document.createElement('div');
-    div.className = "item1";
-    return div;
 }
 var preFocEle;
 function highlight(e) {
@@ -463,105 +483,81 @@ var rowarr = [0, 1];
 var sc = 0;
 function overallscrolling(e) {
     e.preventDefault();
-    var overall=document.querySelector('.overall');
-    var overallTop = overall.scrollTop;    
-    var main = document.querySelector('.main')    
+    var overall = document.querySelector('.overall');
+    var overallTop = overall.scrollTop;
+    var main = document.querySelector('.main')
     var checking = Math.round(overallTop / height);
     if (checking != previousblock) {
-        if (previousblock > checking) {
-            setTimeout(() => {
+        if (checking === totalblock) {
+            block = checking
+            preblock = checking;
+            printing(checking - 2, 'down');
+            printing(checking - 1, 'down');
+            printing(checking, 'down');
+        } else {
+            if (previousblock > checking) {
                 printing(checking + 1, 'up');
                 printing(checking, 'up');
                 printing(checking - 1, 'up');
                 preblock = checking;
-            }, 10);
-
-        } else {
-            setTimeout(() => {
+            } else {
                 printing(checking - 1, 'down');
                 printing(checking, 'down');
                 printing(checking + 1, 'down');
                 block = checking
-            }, 10);
+            }
+
         }
         previousblock = checking;
     }
     else {
         main.scrollTop = sc + overallTop % height;
     }
-    if(overallTop===0){
-        block=1;
-        main.scrollTop = 0;        
-       }
-   
+    if (overallTop === 0) {
+        block = 0;
+        main.scrollTop = 0;
+    }
 }
-function printing(x, dir) {   
-    var overall=document.querySelector('.overall');
-    var scrolltop=overall.scrollTop;
-    var scrollHeight=overall.scrollHeight
+function printing(x, dir) {
+    var overall = document.querySelector('.overall');
+    var scrolltop = overall.scrollTop;
+    var scrollHeight = overall.scrollHeight
     var container = document.querySelector('.container');
-    var down_removing_start;
     var main = document.querySelector('.main');
     var childs = container.childElementCount;
-    var up_removing_start = glo.columns.length + 1;
-    var up_removing_end = ((height / 20) * up_removing_start) + up_removing_start;
     var three_block_children = ((height / 20) * up_removing_start) * 3;
-    var two_block_children = ((height / 20) * up_removing_start) * 2;
     var include = rowarr.includes(x);
     if (x >= 0) {
         if (include) {
-
         }
         else {
             var start = Math.floor((height * x) / 20);
             var end = Math.floor(((height * x) + height) / 20);
             if (dir === 'down') {
                 sc = 300;
-                rowarr.push(x);
+                if (x <= totalblock) {
+                    rowarr.push(x);
+                }
                 loopingrows(start, end, glo, 'container')
                 if (childs >= three_block_children) {
                     rowarr.shift();
-                    for (var i = up_removing_end - 1; i >= up_removing_start; i--) {
-                        var child = container.children[i];
-                        if (child) {
-                            container.removeChild(child);
-                        }
-                    }
                 }
             }
             else {
                 sc = 0;
                 rowarr.unshift(x);
                 loopingrows(start, end, glo, 'inset')
-                if (childs >= three_block_children) {
-                    rowarr.pop();
-                    down_removing_start = container.children.length - 1;
-                    for (var j = down_removing_start; j >= three_block_children + up_removing_start; j--) {
-                        var child = container.children[j];
-                        if (child) {
-                            container.removeChild(child);
-                        }
-                    }
-                }
+                rowarr.pop()
             }
         }
-        if(scrolltop===0){
+        if (scrolltop === 0) {
             main.scrollTop = 0;
-        }else if(scrolltop===scrollHeight-height){
-            main.scrollTop = height*2;
-        }else{
+        } else if (scrolltop === scrollHeight - height) {
+            main.scrollTop = height * 2;
+        } else {
             main.scrollTop = height;
         }
-    }
-    else {
-        down_removing_start = container.children.length - 1;
-        for (var j = down_removing_start; j >= two_block_children + up_removing_start; j--) {
-            var child = container.children[j];
-            if (child) {
-                container.removeChild(child);
-            }
-        }
-        rowarr.pop();
+
     }
 }
 
