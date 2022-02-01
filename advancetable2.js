@@ -82,22 +82,23 @@ function generaterows(n, object) {
     for (var i = 1; i <= n; i++) {
         creatingdata(object);
     }
-}
+} var columns_length;
 function onloading() {
     generaterows(100, table);
     if (glo.tableheight === '') {
         glo.tableheight = 300;
     }
+    columns_length = glo.columns.length;
     var No_of_rows = glo.rows.length
     var dumy = document.querySelector('.dummy');
     dumy.style.height = (No_of_rows * 20) + 20 + 'px';
     height = glo.tableheight;
     creatingcolumns();
-    var columns = glo.columns.length;
+    ;
     var main = document.querySelector('.main');
     var container = document.querySelector('.container');
     container.style.gridTemplateColumns += ` 40px`;
-    for (var i = 0; i < columns; i++) {
+    for (var i = 0; i < columns_length; i++) {
         container.style.gridTemplateColumns += ` 100px`;
     }
     var mainsctop = main.scrollTop;
@@ -106,8 +107,8 @@ function onloading() {
         var end = Math.floor((mainsctop + height) / 20);
         var nextstart = end;
         var nextend = (height + height) / 20;
-        loopingrows(start, end, glo, 'container');
-        loopingrows(nextstart, nextend, glo, 'container');
+        loopingrows(start, end, 'container');
+        loopingrows(nextstart, nextend, 'container');
     }
     container.addEventListener('click', highlight);
     container.addEventListener('dblclick', editing);
@@ -122,9 +123,8 @@ function onloading() {
 function creatingcolumns() {
     var main = document.querySelector('.overall')
     main.style.height = glo.tableheight + 'px';
-    collength = glo.columns.length;
     var container = document.querySelector('.container');
-    for (var i = 0; i <= collength; i++) {
+    for (var i = 0; i <= columns_length; i++) {
         var ele = creat('container');
         ele.classList.add('header');
         container.appendChild(ele)
@@ -141,19 +141,19 @@ function creatingcolumns() {
 }
 var ele_index;
 var children_count
-function loopingrows(s, e, ob, a) {
+function loopingrows(s, e, a) {
     var container = document.querySelector('.container')
     children_count = container.childElementCount;
-    var rows = ob.rows;
+    var rows = glo.rows;
     if (a === 'container') {
         for (var i = s; i < e; i++) {
-            creatingrows(rows, i, ob, a)
+            creatingrows(rows, i, a)
         }
     }
     else {
-        ele_index = 216;
+        ele_index = Math.floor(((height / 20) * (columns_length + 1)) * 2) + columns_length;     
         for (var i = e - 1; i >= s; i--) {
-            creatingrows(rows, i, ob, a)
+            creatingrows(rows, i, a)
         }
     }
     if (highlighted === 'row') {
@@ -166,7 +166,7 @@ var creat = (str) => {
     var container = document.querySelector('.container');
     var div
     if (str === 'container') {
-        if (children_count == 322) {
+        if (children_count == three_block_children + (columns_length + 1)) {
             div = container.childNodes[7];
         }
         else {
@@ -184,9 +184,9 @@ var creat = (str) => {
 var highlightrowNo;
 var highlightrow;
 var highlighted;
-function creatingrows(y, z, ob, a) {
+function creatingrows(y, z, a) {
     var container = document.querySelector('.container');
-    var elementslength = ob.columns.length;
+    var elementslength = glo.columns.length;
     if (y[z] !== undefined) {
         var x = document.querySelector('.container');
         ele_index++;
@@ -207,8 +207,8 @@ function creatingrows(y, z, ob, a) {
         for (var j = 0; j < elementslength; j++) {
             ele_index++;
             var div = creat(a);
-            var sub = ob.columns[j].title;
-            div.innerText = y[z][ob.columns[j].title];
+            var sub = glo.columns[j].title;
+            div.innerText = y[z][glo.columns[j].title];
             div.setAttribute('value', 'cells');
             div.setAttribute('title', sub);
             div.setAttribute('tabindex', 1)
@@ -221,10 +221,13 @@ function creatingrows(y, z, ob, a) {
         }
     }
     else {
+
+
         ele_index = 7;
         container.childNodes[ele_index].remove();
         for (var i = 0; i < elementslength; i++) {
             container.childNodes[ele_index].remove();
+
         }
     }
 }
@@ -494,6 +497,12 @@ function overallscrolling(e) {
             printing(checking - 2, 'down');
             printing(checking - 1, 'down');
             printing(checking, 'down');
+        } else if (checking == 0) {
+            printing(checking + 2, 'up');
+            printing(checking + 1, 'up');
+            printing(checking, 'up');
+            block = checking;
+            preblock = checking
         } else {
             if (previousblock > checking) {
                 printing(checking + 1, 'up');
@@ -516,8 +525,9 @@ function overallscrolling(e) {
     if (overallTop === 0) {
         block = 0;
         main.scrollTop = 0;
-    }
-}
+    }  
+} 
+var three_block_children;
 function printing(x, dir) {
     var overall = document.querySelector('.overall');
     var scrolltop = overall.scrollTop;
@@ -525,7 +535,7 @@ function printing(x, dir) {
     var container = document.querySelector('.container');
     var main = document.querySelector('.main');
     var childs = container.childElementCount;
-    var three_block_children = ((height / 20) * up_removing_start) * 3;
+    three_block_children = Math.floor(((height / 20) * 7) * 3);
     var include = rowarr.includes(x);
     if (x >= 0) {
         if (include) {
@@ -534,19 +544,19 @@ function printing(x, dir) {
             var start = Math.floor((height * x) / 20);
             var end = Math.floor(((height * x) + height) / 20);
             if (dir === 'down') {
-                sc = 300;
+                sc = height;
                 if (x <= totalblock) {
                     rowarr.push(x);
                 }
-                loopingrows(start, end, glo, 'container')
-                if (childs >= three_block_children) {
+                loopingrows(start, end, 'container')
+                if (childs >= three_block_children + (columns_length + 1)) {
                     rowarr.shift();
                 }
             }
             else {
                 sc = 0;
                 rowarr.unshift(x);
-                loopingrows(start, end, glo, 'inset')
+                loopingrows(start, end, 'inset')
                 rowarr.pop()
             }
         }
@@ -560,6 +570,9 @@ function printing(x, dir) {
 
     }
 }
+
+
+
 
 
 
