@@ -84,7 +84,7 @@ function generaterows(n, object) {
     }
 } var columns_length;
 function onloading() {
-    generaterows(100, table);
+    generaterows(1000, table);
     if (glo.tableheight === '') {
         glo.tableheight = 300;
     }
