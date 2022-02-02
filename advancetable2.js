@@ -166,8 +166,8 @@ var creat = (str) => {
     var container = document.querySelector('.container');
     var div
     if (str === 'container') {
-        if (children_count == three_block_children + (columns_length + 1)) {
-            div = container.childNodes[7];
+        if (children_count == three_block_children + (columns_length + 1)) {           
+            div = container.childNodes[columns_length+1];
         }
         else {
             div = document.createElement('div');
@@ -221,8 +221,6 @@ function creatingrows(y, z, a) {
         }
     }
     else {
-
-
         ele_index = 7;
         container.childNodes[ele_index].remove();
         for (var i = 0; i < elementslength; i++) {
@@ -535,7 +533,7 @@ function printing(x, dir) {
     var container = document.querySelector('.container');
     var main = document.querySelector('.main');
     var childs = container.childElementCount;
-    three_block_children = Math.floor(((height / 20) * 7) * 3);
+    three_block_children = Math.floor(((height / 20) * (columns_length+1)) * 3);   
     var include = rowarr.includes(x);
     if (x >= 0) {
         if (include) {
