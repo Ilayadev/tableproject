@@ -1,5 +1,5 @@
 var table = {
-    tableheight: 300,
+    tableheight: 600,
     columns: [
         {
             title: 'id',
@@ -84,7 +84,9 @@ function generaterows(n, object) {
     }
 } var columns_length;
 function onloading() {
-    generaterows(1000, table);
+    var container = document.querySelector('.container');    
+    generaterows(1000, table);    
+    console.log(glo.tableheight);
     if (glo.tableheight === '') {
         glo.tableheight = 300;
     }
@@ -94,12 +96,10 @@ function onloading() {
     dumy.style.height = (No_of_rows * 20) + 20 + 'px';
     height = glo.tableheight;
     creatingcolumns();
-    ;
     var main = document.querySelector('.main');
-    var container = document.querySelector('.container');
     container.style.gridTemplateColumns += ` 40px`;
     for (var i = 0; i < columns_length; i++) {
-        container.style.gridTemplateColumns += ` 100px`;
+        container.style.gridTemplateColumns += ` 1fr`;
     }
     var mainsctop = main.scrollTop;
     if (mainsctop === 0) {
