@@ -23,7 +23,7 @@ var table = {
         }, {
             title: 'attendance',
             type: 'boolean'
-        }
+        }        
     ],
     rows: [
 
@@ -36,10 +36,10 @@ function generatetext() {
 }
 function generatenumber(x) {
     var random;
-    if (x === 'age') {
-        random = Math.floor(Math.random() * 10);
-    } else {
+    if (x === 'id') {
         random = '#' + (Math.floor(Math.random() * 10) + 5000);
+    } else {
+        random = Math.floor(Math.random() * 10);        
     }
     return random;
 }
@@ -85,8 +85,7 @@ function generaterows(n, object) {
 } var columns_length;
 function onloading() {
     var container = document.querySelector('.container');    
-    generaterows(1000, table);    
-    console.log(glo.tableheight);
+    generaterows(1000, table);   
     if (glo.tableheight === '') {
         glo.tableheight = 300;
     }
@@ -142,7 +141,8 @@ function creatingcolumns() {
 var ele_index;
 var children_count
 function loopingrows(s, e, a) {
-    var container = document.querySelector('.container')
+    var container = document.querySelector('.container');
+    var stylesheet = document.styleSheets[0];
     children_count = container.childElementCount;
     var rows = glo.rows;
     if (a === 'container') {
@@ -157,17 +157,17 @@ function loopingrows(s, e, a) {
         }
     }
     if (highlighted === 'row') {
-        if (highlightrow) {
+        if (highlightrowNo>s  ) {
             hightlightingrow(highlightrow);
         }
     }
 }
-var creat = (str) => {
+var creat = (str) => {    
     var container = document.querySelector('.container');
     var div
     if (str === 'container') {
         if (children_count == three_block_children + (columns_length + 1)) {           
-            div = container.childNodes[columns_length+1];
+            div = container.childNodes[columns_length+1];            
         }
         else {
             div = document.createElement('div');
@@ -233,7 +233,6 @@ var block = 0;
 var preblock;
 var totalblock;
 function mainscrolling() {
-    var stylesheet = document.styleSheets[0];
     var overall = document.querySelector('.overall');
     var main = document.querySelector('.main');
     var scrollheight = main.scrollHeight;
@@ -244,28 +243,17 @@ function mainscrolling() {
         if (totalblock > block) {
             block++;
             preblock = block
-            overall.scrollTop = block * height;
-            if (block > 2) {
-                if (highlighted === 'row') {
-                    stylesheet.cssRules[11].selectorText = `.test`;
-                }
-            }
+            overall.scrollTop = block * height;           
         }
     }
     if (scrolltop === 0) {
-        if (preblock > 0) {
-            if (block > 2) {
-                if (highlighted === 'row') {
-                    stylesheet.cssRules[11].selectorText = `.test`;
-                    stylesheet.cssRules[12].selectorText = '.cells';
-                }
-            }
+        if (preblock > 0) {            
             if (preblock != 0) {
                 preblock = preblock - 1;
                 block = preblock;
             }
             overall.scrollTop = preblock * height;
-        }
+        }  
     }
 }
 var preFocEle;
@@ -565,7 +553,6 @@ function printing(x, dir) {
         } else {
             main.scrollTop = height;
         }
-
     }
 }
 
