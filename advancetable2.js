@@ -85,7 +85,7 @@ function generaterows(n, object) {
 } var columns_length;
 function onloading() {
     var container = document.querySelector('.container');    
-    generaterows(1000, table);   
+    generaterows(100, table);   
     if (glo.tableheight === '') {
         glo.tableheight = 300;
     }
@@ -118,6 +118,7 @@ function onloading() {
     container.addEventListener('dragleave', dragleaving);
     container.addEventListener('dragover', dragovering);
     totalblock = Math.floor(glo.rows.length / (height / 20));
+    three_block_children = Math.floor(((height / 20) * (columns_length+1)) * 3);   
 }
 function creatingcolumns() {
     var main = document.querySelector('.overall')
@@ -143,7 +144,12 @@ var children_count
 function loopingrows(s, e, a) {
     var container = document.querySelector('.container');
     var stylesheet = document.styleSheets[0];
-    children_count = container.childElementCount;
+    children_count = container.childElementCount;   
+    if(children_count===three_block_children+(columns_length+1)){
+        removelements=true;       
+    }else{
+        removelements=false;
+    }
     var rows = glo.rows;
     if (a === 'container') {
         for (var i = s; i < e; i++) {
@@ -162,15 +168,17 @@ function loopingrows(s, e, a) {
         }
     }
 }
+var removelements;
 var creat = (str) => {    
     var container = document.querySelector('.container');
     var div
     if (str === 'container') {
-        if (children_count == three_block_children + (columns_length + 1)) {           
+        if (children_count == three_block_children + (columns_length + 1)) {                      
             div = container.childNodes[columns_length+1];            
         }
         else {
             div = document.createElement('div');
+           
         }
     } else {
         div = container.childNodes[ele_index];
@@ -220,12 +228,14 @@ function creatingrows(y, z, a) {
             }
         }
     }
-    else {
-        ele_index = 7;
-        container.childNodes[ele_index].remove();
-        for (var i = 0; i < elementslength; i++) {
-            container.childNodes[ele_index].remove();
+    else {     
 
+        if(removelements){
+            ele_index = 7;
+            container.childNodes[ele_index].remove();
+            for (var i = 0; i < elementslength; i++) {
+            container.childNodes[ele_index].remove();
+             }
         }
     }
 }
@@ -433,7 +443,7 @@ function droping(e) {
         glo.columns[header - 1] = glo.columns[dropheader - 1];
         glo.columns[dropheader - 1] = firindex;
         var loopcount = container.childElementCount / nth;
-        for (var i = 0; i < loopcount; i++) {
+        for (var i = 0; i < loopcount; i++) {   
             var firstele = container.children[(nth * i) + header / 1];
             var secondele = container.children[(nth * i) + dropheader / 1];
             var temptext = firstele.innerText;
@@ -521,7 +531,6 @@ function printing(x, dir) {
     var container = document.querySelector('.container');
     var main = document.querySelector('.main');
     var childs = container.childElementCount;
-    three_block_children = Math.floor(((height / 20) * (columns_length+1)) * 3);   
     var include = rowarr.includes(x);
     if (x >= 0) {
         if (include) {
