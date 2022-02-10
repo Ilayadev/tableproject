@@ -26,7 +26,6 @@ var table = {
         }
     ],
     rows: [
-
     ]
 }
 var glo;
@@ -563,19 +562,3 @@ function printing(x, dir) {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
