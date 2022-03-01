@@ -81,7 +81,7 @@ function generaterows(n, object) {
     dumy.style.height = (n * 20) + 20 + 'px';
     for (var i = 1; i <= n; i++) {
         creatingdata(object);
-    }  
+    }
 }
 function creatingcolumns(ob) {
     glo = ob;
@@ -103,12 +103,12 @@ function creatingcolumns(ob) {
 }
 var preFocEle;
 var highlightrow;
-function highlight(e) {    
+function highlight(e) {
     var att = e.target.getAttribute('value');
     var stylesheet = document.styleSheets[0];
     if (att === 'rowheader' || att === 'columnheader') {
         if (att === 'rowheader') {
-            highlightrow=e.target.innerText;                      
+            highlightrow = e.target.innerText;
             var len = glo.columns.length;
             var rowno = e.target.getAttribute('rowno');
             var start = (rowno * (len + 1)) + 1;
@@ -203,7 +203,7 @@ function removefocus(e) {
 
 }
 function creatingelements() {
-    generaterows(1000, table)
+    generaterows(100000, table)
     creatingcolumns(table)
     if (table.tableheight === '') {
         table.tableheight = '300'
@@ -265,20 +265,20 @@ function assingvalue(start, end, ob) {
             }
             n++;
         }
-        var stylesheet = document.styleSheets[0];       
+        var stylesheet = document.styleSheets[0];
         stylesheet.cssRules[11].selectorText = '.test';
-        row++;          
-    }    
+        row++;
+    }
 }
 function scrolling() {
     n = 7;
-    var main=document.querySelector('.main')
+    var main = document.querySelector('.main')
     var mainsctop = main.scrollTop;
     if (mainsctop >= 0) {
         // if (mainsctop % 2 === 0) {
-            var start = Math.floor(mainsctop / 20);
-            var end = Math.floor((mainsctop/1 + table.tableheight/1) / 20);
-            assingvalue(start, end, table);
+        var start = Math.floor(mainsctop / 20);
+        var end = Math.floor((mainsctop / 1 + table.tableheight / 1) / 20);
+        assingvalue(start, end, table);
         // }
     }
 }
@@ -308,12 +308,12 @@ function droping(e) {
     var att = ele.getAttribute('value');
     if (att === 'columnheader') {
         var dropheader = ele.getAttribute('header');
-        var container = document.querySelector('.container');        
+        var container = document.querySelector('.container');
         var nth = glo.columns.length + 1;
         stylesheet.cssRules[11].selectorText = `.item1:nth-child(${nth}n+${dropheader / 1 + 1})`;
-        var firindex=glo.columns[header-1];
-        glo.columns[header-1]=glo.columns[dropheader-1];
-        glo.columns[dropheader-1]=firindex;
+        var firindex = glo.columns[header - 1];
+        glo.columns[header - 1] = glo.columns[dropheader - 1];
+        glo.columns[dropheader - 1] = firindex;
         var firstele = container.children[header];
         var secondele = container.children[dropheader];
         var temptext = firstele.innerText;
