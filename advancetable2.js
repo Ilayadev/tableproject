@@ -81,7 +81,8 @@ function generaterows(n, object) {
     for (var i = 1; i <= n; i++) {
         creatingdata(object);
     }
-} var columns_length;
+}
+ var columns_length;
 function onloading() {
     var container = document.querySelector('.container');
     generaterows(100, table);
@@ -562,3 +563,17 @@ function printing(x, dir) {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
