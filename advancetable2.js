@@ -85,8 +85,8 @@ function generaterows(n, object) {
  var columns_length;
 function onloading() {
     var container = document.querySelector('.container');
-    generaterows(100000, table);
-    if (glo.tableheight === '') {
+    generaterows(100, table);
+    if (glo.tableheight === '') {   
         glo.tableheight = 300;
     }
     columns_length = glo.columns.length;
@@ -111,7 +111,7 @@ function onloading() {
     }
     container.addEventListener('click', highlight);
     container.addEventListener('dblclick', editing);
-    container.addEventListener('keydown', removefocus);
+    document.body.addEventListener('keydown', removefocus);
     container.addEventListener('drag', draging);
     container.addEventListener('drop', droping);
     container.addEventListener('dragenter', dragentering);
@@ -318,7 +318,25 @@ function editing(e) {
 }
 function removefocus(e) {
     var stylesheet = document.styleSheets[0];
-    var ele = e.target;
+    var overall=document.querySelector('.overall');
+    var overall_scrollheight=overall.scrollHeight;
+    var overall_scrolltop=overall.scrollTop;    
+    var ele = e.target;  
+
+    if(e.ctrlKey){      
+        if(e.keyCode===40){            
+                if(overall_scrollheight!==(overall_scrolltop+600)){
+                   overall.scrollTop=overall_scrollheight
+                   console.log('down')
+                }
+        }
+        if(e.keyCode===38){            
+            if(overall_scrolltop!==0){
+               overall.scrollTop=0  
+               console.log('up')            
+            }
+    }
+    }
     if (ele.hasAttribute('contenteditable')) {
         if (e.keyCode === 13) {
             ele.removeAttribute('contenteditable');
