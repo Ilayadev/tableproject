@@ -82,8 +82,8 @@ border-radius: 25px;
     width: 100%;   
     display:flex;
 }
-.main::-webkit-scrollbar{
+/* .main::-webkit-scrollbar{
     display: none;
-}
+} */
 
 
